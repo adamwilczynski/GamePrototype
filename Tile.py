@@ -2,36 +2,21 @@ import pygame
 import numpy as np
 
 import config
+import graphic_tools
 
 DEBUG = True
 
 class Tile:
-    palette = np.array([
-        [0, 0, 0],  # Black
-        [255, 255, 255], #White
-    ], dtype=np.uint8)
-
-
     def __init__(self, x, y):
         self.x: int = x
         self.y: int = y
         self.values = np.random.choice([False, True], size=(config.TILE_SIZE, config.TILE_SIZE))
 
     @property
-    def _rgb_values(self):
-        rgb_values = self.palette[self.values.astype(np.uint8)]
-
-        if DEBUG:
-            # Set frame borders to True
-            rgb_values[0, :] = True  # Top row
-            rgb_values[-1, :] = True  # Bottom row
-            rgb_values[:, 0] = True  # Left column
-            rgb_values[:, -1] = True  # Right column
-        return rgb_values
-
-    @property
     def surface(self):
-        return pygame.surfarray.make_surface(self._rgb_values)
+        return pygame.surfarray.make_surface(
+            graphic_tools.rgb(self.values, True)
+        )
 
 
 if __name__ == '__main__':

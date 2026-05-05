@@ -2,6 +2,7 @@ import numpy as np
 import pygame
 
 import config
+import graphic_tools
 from graphic_tools import read_asset
 
 
@@ -11,11 +12,13 @@ class Player(pygame.sprite.Sprite):
 
         self.direction = pygame.math.Vector2()
 
-        image_mask = read_asset("./assets/player.png")
-
-        self.image = pygame.surfarray.make_surface(
-            np.random.choice([False, True], size=(config.TILE_SIZE, config.TILE_SIZE))
+        image_matrix = np.random.choice([False, True], size=(config.TILE_SIZE, config.TILE_SIZE))
+        transparency_matrix = read_asset("./assets/player.png")
+        self.image = graphic_tools.make_surface_rgba(
+            graphic_tools.rgb(image_matrix),
+            transparency_matrix
         )
+
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect(
             topleft=(

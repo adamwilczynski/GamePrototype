@@ -1,10 +1,8 @@
 from PIL import Image
 import numpy as np
 
-from config import TILE_SIZE
-
-from PIL import Image
-import numpy as np
+import numpy
+import pygame
 
 def read_asset(filename):
     """False if transparent, True if non-transparent"""
@@ -24,12 +22,54 @@ def read_asset(filename):
     return new_mask
 
 
-def rgb(bool_matrix):
+def rgb(bool_matrix, debug: bool=False):
     palette = np.array([
         [0, 0, 0],  # Black
         [255, 255, 255],  # White
     ], dtype=np.uint8)
-    pass
+
+    rgb_values = palette[bool_matrix.astype(np.uint8)]
+
+    if debug:
+        # Set frame borders to True
+        rgb_values[0, :] = True  # Top row
+        rgb_values[-1, :] = True  # Bottom row
+        rgb_values[:, 0] = True  # Left column
+        rgb_values[:, -1] = True  # Right column
+    return rgb_values
+
+
+def create_rgba(rgb_matrix, bool_matrix):
+    """
+    Convert RGB + boolean mask to RGBA.
+
+    Args:
+    rgb_matrix: np.array of shape (width, height, 3), uint8 dtype expected
+    bool_matrix: np.array of shape (width, height), boolean
+
+    Returns:
+    np.array of shape (width, height, 4)
+    """
+    print(rgb_matrix.shape)
+    print(bool_matrix.shape)
+    alpha = np.where(bool_matrix, 255, 0).astype(np.uint8)[:, :, np.newaxis]
+    return np.concatenate((rgb_matrix, alpha), axis=2)
+
+
+def make_surface_rgba(rgb_matrix, bool_matrix):
+    rgba_matrix = create_rgba(rgb_matrix, bool_matrix)
+    print(rgba_matrix.shape)
+    # Ensure the array has 4 channels
+    shape = rgba_matrix.shape
+    surface = pygame.Surface(shape[0:2], pygame.SRCALPHA, 32)
+
+    # Copy the RGB part
+    pygame.pixelcopy.array_to_surface(surface, rgba_matrix[:, :, 0:3])
+
+    # Copy the Alpha part
+    surface_alpha = numpy.array(surface.get_view('A'), copy=False)
+    surface_alpha[:, :] = rgba_matrix[:, :, 3]
+    return surface
 
 
 if __name__ == '__main__':

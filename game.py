@@ -17,8 +17,8 @@ tile_map = TileMap()
 tile_map.blit(screen)
 
 all_sprites = pygame.sprite.Group()
-# player = Player()
-# all_sprites.add(player)
+player = Player()
+all_sprites.add(player)
 
 while running:
     # poll for events
@@ -41,7 +41,7 @@ while running:
         direction.y = -1
     elif pressed_keys[pygame.K_DOWN]:
         direction.y = 1
-    # player.direction = direction
+    player.direction = direction
 
     tile_map.blit(screen)
     all_sprites.update()
