@@ -1,34 +1,53 @@
+import config
 from Tile import Tile
+from Player import Player
 from TileMap import TileMap
 
 import pygame
 
-FPS = 60
+FPS = 10
 
 # pygame setup
 pygame.init()
-screen = pygame.display.set_mode((TileMap.SCREEN_WIDTH, TileMap.SCREEN_HEIGHT))
+screen = pygame.display.set_mode((config.SCREEN_WIDTH, config.SCREEN_HEIGHT), pygame.SCALED | pygame.FULLSCREEN)
 clock = pygame.time.Clock()
 running = True
+
+tile_map = TileMap()
+tile_map.blit(screen)
+
+all_sprites = pygame.sprite.Group()
+# player = Player()
+# all_sprites.add(player)
 
 while running:
     # poll for events
     # pygame.QUIT event means the user clicked X to close your window
     for event in pygame.event.get():
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
+                running = False
         if event.type == pygame.QUIT:
             running = False
 
-    # fill the screen with a color to wipe away anything from last frame
-    tile_map = TileMap()
-    for tile in tile_map.iter_tiles_surfaces():
-        screen.blit(tile.surface, (tile.x, tile.y))
-    # screen.fill("purple")
+    pressed_keys = pygame.key.get_pressed()
 
-    # RENDER YOUR GAME HERE
+    direction = pygame.math.Vector2(0, 0)
+    if pressed_keys[pygame.K_LEFT]:
+        direction.x = -1
+    elif pressed_keys[pygame.K_RIGHT]:
+        direction.x = 1
+    if pressed_keys[pygame.K_UP]:
+        direction.y = -1
+    elif pressed_keys[pygame.K_DOWN]:
+        direction.y = 1
+    # player.direction = direction
 
-    # flip() the display to put your work on screen
-    pygame.display.flip()
+    tile_map.blit(screen)
+    all_sprites.update()
+    all_sprites.draw(screen)
 
-    clock.tick(FPS)  # limits FPS to 60
+    pygame.display.update()
+    clock.tick(FPS)
 
 pygame.quit()

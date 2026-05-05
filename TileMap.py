@@ -3,26 +3,16 @@ import itertools
 import numpy as np
 from Tile import Tile
 
+import config
+
 class TileMap:
-    TARGET_SCREEN_WIDTH = 1920
-    TARGET_SCREEN_HEIGHT = 1080
-
-    TILE_NUMBER_WIDTH = TARGET_SCREEN_WIDTH // Tile.TILE_SIZE
-    TILE_NUMBER_HEIGHT = TARGET_SCREEN_HEIGHT // Tile.TILE_SIZE
-
-    # TILE_NUMBER_WIDTH = 4
-    # TILE_NUMBER_HEIGHT = 2
-
-    SCREEN_WIDTH = TILE_NUMBER_WIDTH * Tile.TILE_SIZE
-    SCREEN_HEIGHT = TILE_NUMBER_HEIGHT * Tile.TILE_SIZE
-
     def __init__(self):
         self.tiles = []
-        for y in range(self.TILE_NUMBER_HEIGHT):
+        for y in range(config.TILE_NUMBER_HEIGHT):
             row = []
-            for x in range(self.TILE_NUMBER_WIDTH):
+            for x in range(config.TILE_NUMBER_WIDTH):
                 row.append(
-                    Tile(x * Tile.TILE_SIZE, y * Tile.TILE_SIZE)
+                    Tile(x * config.TILE_SIZE, y * config.TILE_SIZE)
                 )
             self.tiles.append(row)
 
@@ -30,6 +20,9 @@ class TileMap:
         for row in self.tiles:
             yield from row
 
+    def blit(self, screen):
+        for tile in self.iter_tiles_surfaces():
+            screen.blit(tile.surface, (tile.x, tile.y))
 
 
 if __name__ == "__main__":
