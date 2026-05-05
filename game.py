@@ -5,7 +5,8 @@ from TileMap import TileMap
 
 import pygame
 
-FPS = 10
+FPS = 60
+time_to_next_action = 0
 
 # pygame setup
 pygame.init()
@@ -21,6 +22,8 @@ player = Player()
 all_sprites.add(player)
 
 while running:
+    dt = clock.tick(FPS) / 1000.0
+    time_to_next_action -= dt
     # poll for events
     # pygame.QUIT event means the user clicked X to close your window
     for event in pygame.event.get():
@@ -30,24 +33,28 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-    pressed_keys = pygame.key.get_pressed()
-
     direction = pygame.math.Vector2(0, 0)
-    if pressed_keys[pygame.K_LEFT]:
-        direction.x = -1
-    elif pressed_keys[pygame.K_RIGHT]:
-        direction.x = 1
-    if pressed_keys[pygame.K_UP]:
-        direction.y = -1
-    elif pressed_keys[pygame.K_DOWN]:
-        direction.y = 1
     player.direction = direction
+    if time_to_next_action <= 0:
+        pressed_keys = pygame.key.get_pressed()
+
+        if pressed_keys[pygame.K_LEFT]:
+            direction.x = -1
+        elif pressed_keys[pygame.K_RIGHT]:
+            direction.x = 1
+        if pressed_keys[pygame.K_UP]:
+            direction.y = -1
+        elif pressed_keys[pygame.K_DOWN]:
+            direction.y = 1
+        if any([direction.x, direction.y]):
+            player.direction = direction
+            time_to_next_action = config.SECONDS_BETWEEN_ACTIONS
+
 
     tile_map.blit(screen)
     all_sprites.update()
     all_sprites.draw(screen)
 
     pygame.display.update()
-    clock.tick(FPS)
 
 pygame.quit()

@@ -3,7 +3,8 @@ import pygame
 
 import config
 import graphic_tools
-from graphic_tools import read_asset
+
+from ImageArray import ImageArray
 
 
 class Player(pygame.sprite.Sprite):
@@ -12,12 +13,8 @@ class Player(pygame.sprite.Sprite):
 
         self.direction = pygame.math.Vector2()
 
-        image_matrix = np.random.choice([False, True], size=(config.TILE_SIZE, config.TILE_SIZE))
-        transparency_matrix = read_asset("./assets/player.png")
-        self.image = graphic_tools.make_surface_rgba(
-            graphic_tools.rgb(image_matrix),
-            transparency_matrix
-        )
+        self.image_array = ImageArray("./assets/player.png")
+        self.image = self.image_array.image
 
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect(
@@ -39,6 +36,9 @@ class Player(pygame.sprite.Sprite):
             self.rect.y = config.SCREEN_HEIGHT - config.TILE_SIZE
         if self.rect.y < 0:
             self.rect.y = 0
+
+        self.image_array.update()
+        self.image = self.image_array.image
 
 
     def check_collision(self, all_sprites):
