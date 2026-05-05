@@ -1,8 +1,6 @@
-import numpy as np
 import pygame
 
 import config
-import graphic_tools
 
 from ImageArray import ImageArray
 

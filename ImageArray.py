@@ -1,19 +1,19 @@
 import numpy as np
 import pygame
 import config
-import graphic_tools
+import utils
 
 from PIL import Image
 
 class ImageArray:
     def __init__(self, filename: str):
-        self.image_matrix = np.random.choice([False, True], size=(config.TILE_SIZE, config.TILE_SIZE))
+        self.image_matrix = utils.create_random_matrix()
         self.transparency_matrix = read_asset(filename)
 
     @property
     def image(self):
         return make_surface_rgba(
-            graphic_tools.rgb(self.image_matrix),
+            utils.rgb(self.image_matrix),
             self.transparency_matrix
         )
 

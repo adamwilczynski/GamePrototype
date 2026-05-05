@@ -2,7 +2,7 @@ import pygame
 import numpy as np
 
 import config
-import graphic_tools
+import utils
 
 DEBUG = True
 
@@ -10,12 +10,12 @@ class Tile:
     def __init__(self, x, y):
         self.x: int = x
         self.y: int = y
-        self.values = np.random.choice([False, True], size=(config.TILE_SIZE, config.TILE_SIZE))
+        self.values = utils.create_random_matrix()
 
     @property
     def surface(self):
         return pygame.surfarray.make_surface(
-            graphic_tools.rgb(self.values, True)
+            utils.rgb(self.values, True)
         )
 
 

@@ -1,8 +1,9 @@
-
 import numpy as np
 
-import numpy
-import pygame
+import config
+
+def create_random_matrix():
+    return np.random.choice([False, True], size=(config.TILE_SIZE, config.TILE_SIZE))
 
 
 def rgb(bool_matrix, debug: bool=False):
@@ -26,5 +27,4 @@ def rgb(bool_matrix, debug: bool=False):
 
 
 if __name__ == '__main__':
-    for row in read_asset("./assets/player.png"):
-        print(row)
+    pass

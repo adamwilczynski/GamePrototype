@@ -5,7 +5,7 @@ from TileMap import TileMap
 
 import pygame
 
-FPS = 60
+fps = 60
 time_to_next_action = 0
 
 # pygame setup
@@ -22,7 +22,7 @@ player = Player()
 all_sprites.add(player)
 
 while running:
-    dt = clock.tick(FPS) / 1000.0
+    dt = clock.tick(fps) / 1000.0
     time_to_next_action -= dt
     # poll for events
     # pygame.QUIT event means the user clicked X to close your window
