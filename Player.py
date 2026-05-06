@@ -11,6 +11,7 @@ class Player(Sprite):
     def __init__(self, tile: Tile):
         super().__init__("./assets/player.png", tile)
 
+        self.look_direction = pygame.math.Vector2(0, 0)
         self.speed = 100
 
     def check_collision(self, all_sprites):

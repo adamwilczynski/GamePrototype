@@ -1,7 +1,10 @@
 import config
 from Tile import Tile
+
 from Player import Player
-from Enemy import Enemy
+from EnemyRandom import EnemyRandom
+from EnemyFollow import EnemyFollow
+
 from TileMap import TileMap
 
 import pygame
@@ -19,9 +22,13 @@ tile_map.blit(screen)
 
 all_sprites = pygame.sprite.Group()
 middle_tile = tile_map.tiles[config.TILE_NUMBER_HEIGHT // 2][config.TILE_NUMBER_WIDTH // 2]
+top_left_tile = tile_map.tiles[0][0]
+
+enemy_follow = EnemyFollow(top_left_tile)
 player = Player(middle_tile)
-enemy = Enemy(middle_tile)#do zmiany
-all_sprites.add(enemy)
+enemyRandom = EnemyRandom(middle_tile)#do zmiany
+all_sprites.add(enemy_follow)
+all_sprites.add(enemyRandom)
 all_sprites.add(player)
 
 while running:

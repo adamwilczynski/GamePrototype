@@ -13,16 +13,16 @@ class ImageArray:
 
     def updated_image(self, look_direction):
         self._update()
-
         transparency_matrix = self.transparency_matrix
-        if look_direction.x < 0:
-            transparency_matrix = self.rotate_left()
-        if look_direction.x > 0:
-            transparency_matrix = self.rotate_right()
-        if look_direction.y < 0:
-            transparency_matrix = self.rotate_up()
-        if look_direction.y > 0:
-            transparency_matrix = self.rotate_down()
+        if look_direction:
+            if look_direction.x < 0:
+                transparency_matrix = self.rotate_left()
+            if look_direction.x > 0:
+                transparency_matrix = self.rotate_right()
+            if look_direction.y < 0:
+                transparency_matrix = self.rotate_up()
+            if look_direction.y > 0:
+                transparency_matrix = self.rotate_down()
 
         return make_surface_rgba(
             utils.rgb(self.image_matrix),

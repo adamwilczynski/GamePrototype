@@ -16,7 +16,7 @@ class Sprite(pygame.sprite.Sprite):
         super().__init__()
 
         self.move_direction = pygame.math.Vector2(0, 0)
-        self.look_direction = pygame.math.Vector2(0, 0)
+
 
         self.image_array = ImageArray(filename)
         self.image = self.image_array.updated_image(self.move_direction)
@@ -42,7 +42,7 @@ class Sprite(pygame.sprite.Sprite):
         if self.rect.y < config.TILE_MAP_START_Y:
             self.rect.y = config.TILE_MAP_START_Y
 
-        self.image = self.image_array.updated_image(self.look_direction)
+        self.image = self.image_array.updated_image(None)
 
 
 
