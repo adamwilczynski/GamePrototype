@@ -1,5 +1,6 @@
 import pygame
 
+from Tile import Tile
 import config
 from ImageArray import ImageArray
 
@@ -7,20 +8,24 @@ from ImageArray import ImageArray
 class Sprite(pygame.sprite.Sprite):
     speed = 0
 
-    def __init__(self, filename: str):
+    def __init__(
+            self,
+            filename: str,
+            tile: Tile
+    ):
         super().__init__()
 
-        self.move_direction = pygame.math.Vector2()
+        self.move_direction = pygame.math.Vector2(0, 0)
         self.look_direction = pygame.math.Vector2(0, 0)
 
-        self.image_array = ImageArray("./assets/player.png")
+        self.image_array = ImageArray(filename)
         self.image = self.image_array.updated_image(self.move_direction)
 
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect(
             topleft=(
-                (config.TILE_NUMBER_WIDTH // 2) * config.TILE_SIZE,
-                (config.TILE_NUMBER_HEIGHT // 2) * config.TILE_SIZE
+                tile.x,
+                tile.y
             )
         )
 

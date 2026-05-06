@@ -6,7 +6,6 @@ from TileMap import TileMap
 import pygame
 
 fps = 60
-time_to_next_action = 0
 
 # pygame setup
 pygame.init()
@@ -18,14 +17,12 @@ tile_map = TileMap()
 tile_map.blit(screen)
 
 all_sprites = pygame.sprite.Group()
-player = Player()
+middle_tile = tile_map.tiles[config.TILE_NUMBER_HEIGHT // 2][config.TILE_NUMBER_WIDTH // 2]
+player = Player(middle_tile)
 all_sprites.add(player)
 
 while running:
     dt = clock.tick(fps) / 1000.0
-    time_to_next_action -= dt
-    # poll for events
-    # pygame.QUIT event means the user clicked X to close your window
     for event in pygame.event.get():
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
@@ -35,33 +32,31 @@ while running:
 
     move_direction = pygame.math.Vector2(0, 0)
     player.move_direction = move_direction
-    if time_to_next_action <= 0:
-        pressed_keys = pygame.key.get_pressed()
+
+    pressed_keys = pygame.key.get_pressed()
 
 
-        if all([
-            pressed_keys[pygame.K_LEFT], pressed_keys[pygame.K_RIGHT]
-        ]):
-            move_direction.x = 0
-        elif pressed_keys[pygame.K_LEFT]:
-            move_direction.x = -1
-        elif pressed_keys[pygame.K_RIGHT]:
-            move_direction.x = 1
+    if all([
+        pressed_keys[pygame.K_LEFT], pressed_keys[pygame.K_RIGHT]
+    ]):
+        move_direction.x = 0
+    elif pressed_keys[pygame.K_LEFT]:
+        move_direction.x = -1
+    elif pressed_keys[pygame.K_RIGHT]:
+        move_direction.x = 1
 
-        if all([
-            pressed_keys[pygame.K_UP], pressed_keys[pygame.K_DOWN]
-        ]):
-            move_direction.x = 0
-        elif pressed_keys[pygame.K_UP]:
-            move_direction.y = -1
-        elif pressed_keys[pygame.K_DOWN]:
-            move_direction.y = 1
+    if all([
+        pressed_keys[pygame.K_UP], pressed_keys[pygame.K_DOWN]
+    ]):
+        move_direction.x = 0
+    elif pressed_keys[pygame.K_UP]:
+        move_direction.y = -1
+    elif pressed_keys[pygame.K_DOWN]:
+        move_direction.y = 1
 
-        if any([move_direction.x, move_direction.y]):
-            player.move_direction = move_direction
-            player.look_direction = move_direction
-            time_to_next_action = config.SECONDS_BETWEEN_ACTIONS
-
+    if any([move_direction.x, move_direction.y]):
+        player.move_direction = move_direction
+        player.look_direction = move_direction
 
     tile_map.blit(screen)
     all_sprites.update(dt)
