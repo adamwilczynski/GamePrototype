@@ -9,14 +9,7 @@ from Glitch import Glitch
 
 from TileMap import TileMap
 
-import pygame
-import wave
-
-import numpy as np
-
-import wave
-import numpy as np
-import pygame
+import video_support
 
 import wave
 import numpy as np
@@ -94,7 +87,7 @@ pygame.init()
 
 bg_sound = load_wav_sound("./assets/core_ambient.wav", speed=0.8, volume=0.8     )
 background_channel = pygame.mixer.Channel(0)
-background_channel.play(bg_sound, loops=-1)
+bg_music_playing = False
 
 screen = pygame.display.set_mode((config.SCREEN_WIDTH, config.SCREEN_HEIGHT), pygame.SCALED | pygame.FULLSCREEN)
 clock = pygame.time.Clock()
@@ -117,6 +110,14 @@ all_sprites.add(enemy_follow)
 all_sprites.add(enemyRandom)
 all_sprites.add(player)
 all_sprites.add(glitch)
+
+video_frames = video_support.iter_video_frames_timed("./assets/intro.mp4", size=screen.get_size())
+current_frame = None
+time_until_next_frame = 0.0
+video_done = False
+load_wav_sound("./assets/maintheme.wav", volume=0.4).play()  # Muzyka
+load_wav_sound("./assets/intro.wav", speed=0.95).play()
+
 while running:
     dt = clock.tick(fps) / 1000.0
     for event in pygame.event.get():
@@ -125,6 +126,28 @@ while running:
                 running = False
         if event.type == pygame.QUIT:
             running = False
+
+    if not video_done:
+        time_until_next_frame -= dt
+        if time_until_next_frame <= 0.0:
+            try:
+                current_frame, frame_delay = next(video_frames)
+                time_until_next_frame += frame_delay
+            except StopIteration:
+                video_done = True
+
+        screen.fill((0, 0, 0))
+        if current_frame is not None:
+            screen.blit(current_frame, (0, 0))
+
+        pygame.display.update()
+
+        pygame.time.wait(5)
+        continue
+
+    if not bg_music_playing:
+        background_channel.play(bg_sound, loops=-1)
+        bg_music_playing = True
 
     move_direction = pygame.math.Vector2(0, 0)
     player.move_direction = move_direction
@@ -156,7 +179,7 @@ while running:
 
     if pygame.sprite.collide_mask(player, glitch):
         glitch.relocate()
-        sound = load_wav_sound("./assets/glitch.wav", 4)
+        sound = load_wav_sound("./assets/glitch.wav", 4 * (health / 100))
         sound.play()
         health = min(config.MAX_HEALTH, health + 10)
         # Opcjonalnie: print("Zebrałeś glitcha!") lub player.points += 1
@@ -166,6 +189,8 @@ while running:
         if pygame.sprite.collide_mask(player, enemy_follow) or \
                 pygame.sprite.collide_mask(player, enemyRandom):
             health -= 5 # Spadek zdrowia
+            sound = load_wav_sound("./assets/enemy.wav", 4 * (health / 100))
+            sound.play()
             player.invincibility_timer = 1.0
 
     tile_map.blit(screen)
