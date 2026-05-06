@@ -1,6 +1,7 @@
 import config
 from Tile import Tile
 from Player import Player
+from Enemy import Enemy
 from TileMap import TileMap
 
 import pygame
@@ -19,6 +20,8 @@ tile_map.blit(screen)
 all_sprites = pygame.sprite.Group()
 middle_tile = tile_map.tiles[config.TILE_NUMBER_HEIGHT // 2][config.TILE_NUMBER_WIDTH // 2]
 player = Player(middle_tile)
+enemy = Enemy(middle_tile)#do zmiany
+all_sprites.add(enemy)
 all_sprites.add(player)
 
 while running:
