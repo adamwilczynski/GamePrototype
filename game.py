@@ -27,8 +27,8 @@ fps = config.MAX_FPS
 # pygame setup
 pygame.init()
 pygame.mixer.init(frequency=44100, size=-16, channels=2)
-bgm = SpeedControlledBGM("./assets/core_ambient.wav", speed=1.0, volume=0.5)
-bgm.play()
+# bgm = SpeedControlledBGM("./assets/core_ambient.wav", speed=1.0, volume=0.5)
+# bgm.play()
 
 screen = pygame.display.set_mode((config.SCREEN_WIDTH, config.SCREEN_HEIGHT), pygame.SCALED | pygame.FULLSCREEN)
 clock = pygame.time.Clock()
@@ -103,7 +103,7 @@ while running:
     fps = calculate_fps(health)
 
 
-    bgm.set_speed(10 * health / config.MAX_HEALTH)
+    # bgm.set_speed(10 * health / config.MAX_HEALTH)
 
     if health <= 0:
         running = False

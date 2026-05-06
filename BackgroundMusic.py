@@ -71,20 +71,39 @@ class SpeedControlledBGM:
 
         return pygame.sndarray.make_sound(np.ascontiguousarray(resampled))
 
+    def _build_sound_from_position(self, speed, start_seconds):
+        start_index = int(start_seconds * self.original_rate)
+        start_index = max(0, min(start_index, len(self.original_audio) - 1))
+
+        tail = self.original_audio[start_index:]
+        resampled = self._resample_audio(tail, speed)
+        return pygame.sndarray.make_sound(np.ascontiguousarray(resampled))
+
     def play(self):
+        self.play_started_at_ms = pygame.time.get_ticks()
+        self.sound = self._build_sound_from_position(self.current_speed, self.source_pos_seconds)
+        self.sound.set_volume(self.volume)
         self.channel.play(self.sound, loops=-1)
 
     def stop(self):
         self.channel.stop()
 
     def set_speed(self, new_speed):
-        was_playing = self.channel.get_busy()
-        self.stop()
-        self.speed = new_speed
-        self.sound = self._build_sound(self.speed)
+        now = pygame.time.get_ticks()
+
+        if self.channel.get_busy():
+            elapsed_real = (now - self.play_started_at_ms) / 1000.0
+            self.source_pos_seconds += elapsed_real * self.current_speed
+
+        self.source_pos_seconds %= (len(self.original_audio) / self.original_rate)
+
+        self.channel.stop()
+        self.current_speed = new_speed
+        self.play_started_at_ms = now
+
+        self.sound = self._build_sound_from_position(self.current_speed, self.source_pos_seconds)
         self.sound.set_volume(self.volume)
-        if was_playing:
-            self.play()
+        self.channel.play(self.sound, loops=-1)
 
     def set_volume(self, volume):
         self.volume = max(0.0, min(1.0, volume))
