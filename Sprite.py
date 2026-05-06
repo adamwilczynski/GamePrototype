@@ -33,11 +33,11 @@ class Sprite(pygame.sprite.Sprite):
         self.rect.x += self.move_direction.x * self.speed * dt
         self.rect.y += self.move_direction.y * self.speed * dt
 
-        if self.rect.x >= config.SCREEN_WIDTH:
+        if self.rect.x >= config.SCREEN_WIDTH - config.TILE_SIZE:
             self.rect.x = config.SCREEN_WIDTH - config.TILE_SIZE
         if self.rect.x < 0:
             self.rect.x = 0
-        if self.rect.y >= config.SCREEN_HEIGHT:
+        if self.rect.y >= config.SCREEN_HEIGHT - config.TILE_SIZE:
             self.rect.y = config.SCREEN_HEIGHT - config.TILE_SIZE
         if self.rect.y < config.TILE_MAP_START_Y:
             self.rect.y = config.TILE_MAP_START_Y

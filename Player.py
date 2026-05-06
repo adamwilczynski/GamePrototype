@@ -30,6 +30,7 @@ class Player(Sprite):
         else:
             # 3. Jeśli się nie chowamy, pozwalamy Sprite'owi robić swoje (ruch + animacja)
             super().update(dt)
+            self.image = self.image_array.updated_image(self.move_direction)
 
     def check_collision(self, all_sprites):
         pass
