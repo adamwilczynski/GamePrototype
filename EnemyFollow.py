@@ -1,25 +1,21 @@
 import pygame
-import random
 from Sprite import Sprite
+from Tile import Tile
 
 
-class EnemyFollow (Sprite):
-    def __init__(self, tile):
+class EnemyFollow(Sprite):
+    def __init__(self, tile, player_to_follow):
         super().__init__("./assets/enemyfollow.png", tile)
-        self.speed = 50
-        self.change_direction_time = 0
+        self.player = player_to_follow  # Zapamiętujemy gracza
+        self.speed = 80
 
     def update(self, dt):
-        self.change_direction_time -= dt
+        # Obliczamy kierunek na podstawie zapamiętanego obiektu
+        enemy_pos = pygame.math.Vector2(self.rect.center)
+        player_pos = pygame.math.Vector2(self.player.rect.center)
 
-        if self.change_direction_time <= 0:
-            # Losujemy wektor i od razu go normalizujemy, jeśli nie jest zerowy
-            dir_vec = pygame.math.Vector2(random.uniform(-1, 1), random.uniform(-1, 1))
+        direction = player_pos - enemy_pos
+        if direction.length_squared() > 0:
+            self.move_direction = direction.normalize()
 
-            if dir_vec.length_squared() > 0:
-                self.move_direction = dir_vec.normalize()
-
-            self.change_direction_time = random.uniform(1, 3)
-
-        # Wywołujemy super().update tylko RAZ na końcu
         super().update(dt)
