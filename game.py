@@ -1,5 +1,6 @@
+import math
+
 import config
-from Tile import Tile
 
 from Player import Player
 from EnemyRandom import EnemyRandom
@@ -10,7 +11,17 @@ from TileMap import TileMap
 
 import pygame
 
-fps = 60
+
+def calculate_fps(health):
+    return min(
+        math.floor(
+            config.MAX_FPS * (health / 100)
+        ),
+        config.MAX_FPS
+    )
+
+health = 100
+fps = config.MAX_FPS
 
 # pygame setup
 pygame.init()
@@ -74,6 +85,7 @@ while running:
 
     if pygame.sprite.collide_mask(player, glitch):
         glitch.relocate()
+        health += 10
         # Opcjonalnie: print("Zebrałeś glitcha!") lub player.points += 1
         # --- RYSOWANIE ---
     tile_map.blit(screen)
@@ -81,5 +93,11 @@ while running:
     all_sprites.draw(screen)
 
     pygame.display.update()
+
+    health -= dt * config.HEALTH_DEPLETION
+    fps = calculate_fps(health)
+
+    if health <= 0:
+        running = False
 
 pygame.quit()
