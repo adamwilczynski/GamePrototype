@@ -38,21 +38,32 @@ while running:
     if time_to_next_action <= 0:
         pressed_keys = pygame.key.get_pressed()
 
-        if pressed_keys[pygame.K_LEFT]:
+
+        if all([
+            pressed_keys[pygame.K_LEFT], pressed_keys[pygame.K_RIGHT]
+        ]):
+            direction.x = 0
+        elif pressed_keys[pygame.K_LEFT]:
             direction.x = -1
         elif pressed_keys[pygame.K_RIGHT]:
             direction.x = 1
-        if pressed_keys[pygame.K_UP]:
+
+        if all([
+            pressed_keys[pygame.K_UP], pressed_keys[pygame.K_DOWN]
+        ]):
+            direction.x = 0
+        elif pressed_keys[pygame.K_UP]:
             direction.y = -1
         elif pressed_keys[pygame.K_DOWN]:
             direction.y = 1
+
         if any([direction.x, direction.y]):
             player.direction = direction
             time_to_next_action = config.SECONDS_BETWEEN_ACTIONS
 
 
     tile_map.blit(screen)
-    all_sprites.update()
+    all_sprites.update(dt)
     all_sprites.draw(screen)
 
     pygame.display.update()

@@ -5,6 +5,8 @@ from ImageArray import ImageArray
 
 
 class Sprite(pygame.sprite.Sprite):
+    speed = 0
+
     def __init__(self, filename: str):
         super().__init__()
 
@@ -21,9 +23,9 @@ class Sprite(pygame.sprite.Sprite):
             )
         )
 
-    def update(self):
-        self.rect.x += self.direction.x * config.TILE_SIZE
-        self.rect.y += self.direction.y * config.TILE_SIZE
+    def update(self, dt):
+        self.rect.x += self.direction.x * self.speed * dt
+        self.rect.y += self.direction.y * self.speed * dt
 
         if self.rect.x >= config.SCREEN_WIDTH:
             self.rect.x = config.SCREEN_WIDTH - config.TILE_SIZE
@@ -35,9 +37,7 @@ class Sprite(pygame.sprite.Sprite):
             self.rect.y = config.TILE_MAP_START_Y
 
         self.image = self.image_array.updated_image
-        if self.direction.y > 0:
-            self.image = pygame.transform.flip(
-                self.image, True, False
-            )
+
+
 
 
