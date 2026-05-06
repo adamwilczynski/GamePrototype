@@ -1,5 +1,6 @@
 import math
 
+from ImageArray import ImageArray
 import config
 
 from Player import Player
@@ -14,6 +15,8 @@ import video_support
 import wave
 import numpy as np
 import pygame
+
+print(config.SCREEN_WIDTH, config.SCREEN_HEIGHT)
 
 def load_wav_sound(filename, speed=1.0, volume=1.0, mixer_channels=16):
     if speed <= 0:
@@ -120,14 +123,15 @@ load_wav_sound("./assets/intro.wav", speed=0.9).play()
 
 while running:
     dt = clock.tick(fps) / 1000.0
-    for event in pygame.event.get():
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_ESCAPE:
-                running = False
-        if event.type == pygame.QUIT:
-            running = False
 
     if not video_done:
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    video_done = True
+            if event.type == pygame.QUIT:
+                video_done = True
+
         time_until_next_frame -= dt
         if time_until_next_frame <= 0.0:
             try:
@@ -144,6 +148,13 @@ while running:
 
         pygame.time.wait(30)
         continue
+
+    for event in pygame.event.get():
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
+                running = False
+        if event.type == pygame.QUIT:
+            running = False
 
     if not bg_music_playing:
         background_channel.play(bg_sound, loops=-1)
@@ -205,5 +216,20 @@ while running:
 
     if health <= 0:
         running = False
+
+# game_over = True
+# image_array = ImageArray("./assets/gameoversmall.png", scaling=False)
+# while game_over:
+#     dt = clock.tick(fps) / 1000.0
+#     for event in pygame.event.get():
+#         if event.type == pygame.KEYDOWN:
+#             if event.key == pygame.K_ESCAPE:
+#                 game_over = False
+#         if event.type == pygame.QUIT:
+#             game_over = False
+#
+#     image = image_array.updated_image(None)
+#     screen.blit(image, (0, 0))
+#     pygame.display.update()
 
 pygame.quit()

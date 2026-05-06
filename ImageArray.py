@@ -6,9 +6,9 @@ import utils
 from PIL import Image
 
 class ImageArray:
-    def __init__(self, filename: str):
+    def __init__(self, filename: str, scaling=True):
         self.image_matrix = utils.create_random_matrix()
-        self.transparency_matrix = read_asset(filename)
+        self.transparency_matrix = read_asset(filename, scaling)
         self.transparency_matrix = self.rotate_right()
 
     def updated_image(self, look_direction):
@@ -44,9 +44,7 @@ class ImageArray:
     def rotate_up(self):
         return np.rot90(self.transparency_matrix, k=4)
 
-
-
-def read_asset(filename):
+def read_asset(filename, scaling=True):
     """
     Convert image into a scaled
     False if transparent, True if non-transparent
@@ -58,14 +56,17 @@ def read_asset(filename):
     alpha = arr[:, :, 3]
     binary_mask = (alpha > 0)
     h, w = binary_mask.shape
-    scale_h = config.TILE_SIZE / h
-    scale_w = config.TILE_SIZE / w
-    if not (scale_h == scale_w and scale_h == int(scale_h)):
-        raise ValueError("Cannot scale by integer factor")
-    scale = int(scale_h)
-    new_mask = np.repeat(np.repeat(binary_mask, scale, axis=0), scale, axis=1)
-    return new_mask
 
+    if scaling:
+        scale_h = config.TILE_SIZE / h
+        scale_w = config.TILE_SIZE / w
+        if not (scale_h == scale_w and scale_h == int(scale_h)):
+            raise ValueError("Cannot scale by integer factor")
+        scale = int(scale_h)
+        new_mask = np.repeat(np.repeat(binary_mask, scale, axis=0), scale, axis=1)
+        return new_mask
+    else:
+        return binary_mask
 
 def create_rgba(rgb_matrix, bool_matrix):
     """
