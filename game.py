@@ -156,11 +156,18 @@ while running:
 
     if pygame.sprite.collide_mask(player, glitch):
         glitch.relocate()
-        health += 10
         sound = load_wav_sound("./assets/glitch.wav", 4)
         sound.play()
+        health = min(config.MAX_HEALTH, health + 10)
         # Opcjonalnie: print("Zebrałeś glitcha!") lub player.points += 1
         # --- RYSOWANIE ---
+    if not player.is_hiding and player.invincibility_timer <= 0:
+        # Sprawdzamy kolizję z dronem lub losowym przeciwnikiem
+        if pygame.sprite.collide_mask(player, enemy_follow) or \
+                pygame.sprite.collide_mask(player, enemyRandom):
+            health -= 10  # Spadek zdrowia
+            player.invincibility_timer = 1.0
+
     tile_map.blit(screen)
     all_sprites.update(dt)
     all_sprites.draw(screen)
