@@ -165,7 +165,7 @@ while running:
         # Sprawdzamy kolizję z dronem lub losowym przeciwnikiem
         if pygame.sprite.collide_mask(player, enemy_follow) or \
                 pygame.sprite.collide_mask(player, enemyRandom):
-            health -= 10  # Spadek zdrowia
+            health -= 5 # Spadek zdrowia
             player.invincibility_timer = 1.0
 
     tile_map.blit(screen)
