@@ -8,11 +8,11 @@ import config
 class TileMap:
     def __init__(self):
         self.tiles = []
-        for y in range(config.TILE_NUMBER_HEIGHT):
+        for tile_y in range(config.TILE_NUMBER_HEIGHT):
             row = []
-            for x in range(config.TILE_NUMBER_WIDTH):
+            for tile_x in range(config.TILE_NUMBER_WIDTH):
                 row.append(
-                    Tile(x * config.TILE_SIZE, y * config.TILE_SIZE)
+                    Tile(tile_x, tile_y)
                 )
             self.tiles.append(row)
 
