@@ -10,10 +10,11 @@ class Sprite(pygame.sprite.Sprite):
     def __init__(self, filename: str):
         super().__init__()
 
-        self.direction = pygame.math.Vector2()
+        self.move_direction = pygame.math.Vector2()
+        self.look_direction = pygame.math.Vector2(0, 0)
 
         self.image_array = ImageArray("./assets/player.png")
-        self.image = self.image_array.updated_image
+        self.image = self.image_array.updated_image(self.move_direction)
 
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect(
@@ -24,8 +25,8 @@ class Sprite(pygame.sprite.Sprite):
         )
 
     def update(self, dt):
-        self.rect.x += self.direction.x * self.speed * dt
-        self.rect.y += self.direction.y * self.speed * dt
+        self.rect.x += self.move_direction.x * self.speed * dt
+        self.rect.y += self.move_direction.y * self.speed * dt
 
         if self.rect.x >= config.SCREEN_WIDTH:
             self.rect.x = config.SCREEN_WIDTH - config.TILE_SIZE
@@ -36,7 +37,7 @@ class Sprite(pygame.sprite.Sprite):
         if self.rect.y < config.TILE_MAP_START_Y:
             self.rect.y = config.TILE_MAP_START_Y
 
-        self.image = self.image_array.updated_image
+        self.image = self.image_array.updated_image(self.look_direction)
 
 
 

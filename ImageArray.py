@@ -8,35 +8,41 @@ from PIL import Image
 class ImageArray:
     def __init__(self, filename: str):
         self.image_matrix = utils.create_random_matrix()
-        self._transparency_matrix = read_asset(filename)
+        self.transparency_matrix = read_asset(filename)
+        self.transparency_matrix = self.rotate_right()
 
-    @property
-    def transparency_matrix(self):
-        return self._transparency_matrix
-
-    @property
-    def updated_image(self):
+    def updated_image(self, look_direction):
         self._update()
+
+        transparency_matrix = self.transparency_matrix
+        if look_direction.x < 0:
+            transparency_matrix = self.rotate_left()
+        if look_direction.x > 0:
+            transparency_matrix = self.rotate_right()
+        if look_direction.y < 0:
+            transparency_matrix = self.rotate_up()
+        if look_direction.y > 0:
+            transparency_matrix = self.rotate_down()
+
         return make_surface_rgba(
             utils.rgb(self.image_matrix),
-            self.transparency_matrix
+            transparency_matrix
         )
-
-    def rotate_right(self):
-        return self._transparency_matrix = np.rot90(self._transparency_matrix, k=1)
-
-    def rotate_down(self):
-        return self._transparency_matrix = np.rot90(self._transparency_matrix, k=2)
-
-    def rotate_left(self):
-        return self._transparency_matrix = np.rot90(self._transparency_matrix, k=3)
-
-    def rotate_rotate_up(self):
-        return self._transparency_matrix = np.rot90(self._transparency_matrix, k=4)  # same as original
 
     def _update(self, axis=0):
         self.image_matrix = np.roll(self.image_matrix, 1, axis)
 
+    def rotate_right(self):
+        return np.rot90(self.transparency_matrix, k=1)
+
+    def rotate_down(self):
+        return np.rot90(self.transparency_matrix, k=2)
+
+    def rotate_left(self):
+        return np.rot90(self.transparency_matrix, k=3)
+
+    def rotate_up(self):
+        return np.rot90(self.transparency_matrix, k=4)
 
 
 

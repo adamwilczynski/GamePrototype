@@ -33,8 +33,8 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-    direction = pygame.math.Vector2(0, 0)
-    player.direction = direction
+    move_direction = pygame.math.Vector2(0, 0)
+    player.move_direction = move_direction
     if time_to_next_action <= 0:
         pressed_keys = pygame.key.get_pressed()
 
@@ -42,23 +42,24 @@ while running:
         if all([
             pressed_keys[pygame.K_LEFT], pressed_keys[pygame.K_RIGHT]
         ]):
-            direction.x = 0
+            move_direction.x = 0
         elif pressed_keys[pygame.K_LEFT]:
-            direction.x = -1
+            move_direction.x = -1
         elif pressed_keys[pygame.K_RIGHT]:
-            direction.x = 1
+            move_direction.x = 1
 
         if all([
             pressed_keys[pygame.K_UP], pressed_keys[pygame.K_DOWN]
         ]):
-            direction.x = 0
+            move_direction.x = 0
         elif pressed_keys[pygame.K_UP]:
-            direction.y = -1
+            move_direction.y = -1
         elif pressed_keys[pygame.K_DOWN]:
-            direction.y = 1
+            move_direction.y = 1
 
-        if any([direction.x, direction.y]):
-            player.direction = direction
+        if any([move_direction.x, move_direction.y]):
+            player.move_direction = move_direction
+            player.look_direction = move_direction
             time_to_next_action = config.SECONDS_BETWEEN_ACTIONS
 
 
