@@ -16,8 +16,6 @@ import wave
 import numpy as np
 import pygame
 
-print(config.SCREEN_WIDTH, config.SCREEN_HEIGHT)
-
 def load_wav_sound(filename, speed=1.0, volume=1.0, mixer_channels=16):
     if speed <= 0:
         raise ValueError("speed must be > 0")
@@ -121,6 +119,8 @@ video_done = False
 load_wav_sound("./assets/maintheme.wav", volume=0.4, speed=0.9).play()  # Muzyka
 load_wav_sound("./assets/intro.wav", speed=0.9).play()
 
+playerscore = 0
+time_spent = 0
 while running:
     dt = clock.tick(fps) / 1000.0
 
@@ -193,6 +193,7 @@ while running:
         sound = load_wav_sound("./assets/glitch.wav", 4 * (health / 100))
         sound.play()
         health = min(config.MAX_HEALTH, health + 10)
+        playerscore +=1
         # Opcjonalnie: print("Zebrałeś glitcha!") lub player.points += 1
         # --- RYSOWANIE ---
     if not player.is_hiding and player.invincibility_timer <= 0:
@@ -217,6 +218,8 @@ while running:
     if health <= 0:
         running = False
 
+    time_spent += dt
+
 # game_over = True
 # image_array = ImageArray("./assets/gameoversmall.png", scaling=False)
 # while game_over:
@@ -232,4 +235,5 @@ while running:
 #     screen.blit(image, (0, 0))
 #     pygame.display.update()
 
+print(f"GAME OVER...\nScore: {round(time_spent + 10 * playerscore, 2)}")
 pygame.quit()
