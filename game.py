@@ -115,8 +115,8 @@ video_frames = video_support.iter_video_frames_timed("./assets/intro.mp4", size=
 current_frame = None
 time_until_next_frame = 0.0
 video_done = False
-load_wav_sound("./assets/maintheme.wav", volume=0.4).play()  # Muzyka
-load_wav_sound("./assets/intro.wav", speed=0.95).play()
+load_wav_sound("./assets/maintheme.wav", volume=0.4, speed=0.9).play()  # Muzyka
+load_wav_sound("./assets/intro.wav", speed=0.9).play()
 
 while running:
     dt = clock.tick(fps) / 1000.0
@@ -142,7 +142,7 @@ while running:
 
         pygame.display.update()
 
-        pygame.time.wait(5)
+        pygame.time.wait(30)
         continue
 
     if not bg_music_playing:
