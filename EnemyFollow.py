@@ -8,7 +8,7 @@ class EnemyFollow(Sprite):
     def __init__(self, tile, player_to_follow):
         super().__init__("./assets/enemyfollow.png", tile)
         self.player = player_to_follow
-        self.speed = 80
+        self.speed = 60
         # Dodajemy flagę, by wiedzieć, czy już zaczęliśmy uciekać
         self.is_fleeing = False
 
