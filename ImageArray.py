@@ -11,13 +11,14 @@ class ImageArray:
         self.transparency_matrix = read_asset(filename)
 
     @property
-    def image(self):
+    def updated_image(self):
+        self._update()
         return make_surface_rgba(
             utils.rgb(self.image_matrix),
             self.transparency_matrix
         )
 
-    def update(self, axis=0):
+    def _update(self, axis=0):
         self.image_matrix = np.roll(self.image_matrix, 1, axis)
 
 
