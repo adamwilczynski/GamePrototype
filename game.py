@@ -99,11 +99,11 @@ tile_map.blit(screen)
 all_sprites = pygame.sprite.Group()
 middle_tile = tile_map.tiles[config.TILE_NUMBER_HEIGHT // 2][config.TILE_NUMBER_WIDTH // 2]
 top_left_tile = tile_map.tiles[0][0]
-
+bottom_left_tile = tile_map.tiles[config.TILE_NUMBER_HEIGHT-1][0]
 
 player = Player(middle_tile)
 enemy_follow = EnemyFollow(top_left_tile,player)
-enemyRandom = EnemyRandom(middle_tile)#do zmiany
+enemyRandom = EnemyRandom(bottom_left_tile)#do zmiany
 glitch = Glitch(tile_map)
 
 all_sprites.add(enemy_follow)
