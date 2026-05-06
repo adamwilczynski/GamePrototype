@@ -1,7 +1,6 @@
 import math
 
 import config
-from BackgroundMusic import SpeedControlledBGM
 
 from Player import Player
 from EnemyRandom import EnemyRandom
@@ -11,7 +10,73 @@ from Glitch import Glitch
 from TileMap import TileMap
 
 import pygame
+import wave
 
+import numpy as np
+
+import wave
+import numpy as np
+import pygame
+
+import wave
+import numpy as np
+import pygame
+
+def load_wav_sound(filename, speed=1.0, volume=1.0, mixer_channels=16):
+    if speed <= 0:
+        raise ValueError("speed must be > 0")
+
+    volume = max(0.0, min(1.0, float(volume)))
+
+    with wave.open(filename, "rb") as wf:
+        src_channels = wf.getnchannels()
+        sample_rate = wf.getframerate()
+        sample_width = wf.getsampwidth()
+        frame_count = wf.getnframes()
+        raw = wf.readframes(frame_count)
+
+    if sample_width != 2:
+        raise ValueError("This function expects 16-bit PCM WAV files")
+
+    if pygame.mixer.get_init() is None:
+        pygame.mixer.pre_init(
+            frequency=sample_rate,
+            size=-16,
+            channels=2,
+            allowedchanges=0
+        )
+        pygame.init()
+        pygame.mixer.set_num_channels(mixer_channels)
+        pygame.mixer.set_reserved(1)
+
+    _, _, mixer_channels_actual = pygame.mixer.get_init()
+
+    data = np.frombuffer(raw, dtype=np.int16)
+
+    if src_channels > 1:
+        data = data.reshape(-1, src_channels)
+
+    if speed != 1.0:
+        old_idx = np.arange(len(data), dtype=np.float32)
+        new_length = max(1, int(len(data) / speed))
+        new_idx = np.linspace(0, len(data) - 1, new_length, dtype=np.float32)
+
+        if data.ndim == 1:
+            data = np.interp(new_idx, old_idx, data).astype(np.int16)
+        else:
+            data = np.stack(
+                [np.interp(new_idx, old_idx, data[:, ch]) for ch in range(data.shape[1])],
+                axis=1
+            ).astype(np.int16)
+
+    if mixer_channels_actual == 2 and data.ndim == 1:
+        data = np.column_stack((data, data))
+    elif mixer_channels_actual == 1 and data.ndim == 2:
+        data = data.mean(axis=1).astype(np.int16)
+
+    sound = pygame.sndarray.make_sound(data)
+    sound.set_volume(volume)
+    return sound
 
 def calculate_fps(health):
     return min(
@@ -26,9 +91,10 @@ fps = config.MAX_FPS
 
 # pygame setup
 pygame.init()
-pygame.mixer.init(frequency=44100, size=-16, channels=2)
-# bgm = SpeedControlledBGM("./assets/core_ambient.wav", speed=1.0, volume=0.5)
-# bgm.play()
+
+bg_sound = load_wav_sound("./assets/core_ambient.wav", speed=0.8, volume=0.8     )
+background_channel = pygame.mixer.Channel(0)
+background_channel.play(bg_sound, loops=-1)
 
 screen = pygame.display.set_mode((config.SCREEN_WIDTH, config.SCREEN_HEIGHT), pygame.SCALED | pygame.FULLSCREEN)
 clock = pygame.time.Clock()
@@ -91,6 +157,8 @@ while running:
     if pygame.sprite.collide_mask(player, glitch):
         glitch.relocate()
         health += 10
+        sound = load_wav_sound("./assets/glitch.wav", 4)
+        sound.play()
         # Opcjonalnie: print("Zebrałeś glitcha!") lub player.points += 1
         # --- RYSOWANIE ---
     tile_map.blit(screen)
@@ -102,8 +170,6 @@ while running:
     health -= dt * config.HEALTH_DEPLETION
     fps = calculate_fps(health)
 
-
-    # bgm.set_speed(10 * health / config.MAX_HEALTH)
 
     if health <= 0:
         running = False

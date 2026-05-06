@@ -1,6 +1,3 @@
-import itertools
-
-import numpy as np
 from Tile import Tile
 
 import config
