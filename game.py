@@ -4,6 +4,7 @@ from Tile import Tile
 from Player import Player
 from EnemyRandom import EnemyRandom
 from EnemyFollow import EnemyFollow
+from Glitch import Glitch
 
 from TileMap import TileMap
 
@@ -28,10 +29,12 @@ top_left_tile = tile_map.tiles[0][0]
 player = Player(middle_tile)
 enemy_follow = EnemyFollow(top_left_tile,player)
 enemyRandom = EnemyRandom(middle_tile)#do zmiany
+glitch = Glitch(tile_map)
+
 all_sprites.add(enemy_follow)
 all_sprites.add(enemyRandom)
 all_sprites.add(player)
-
+all_sprites.add(glitch)
 while running:
     dt = clock.tick(fps) / 1000.0
     for event in pygame.event.get():
@@ -69,6 +72,10 @@ while running:
         player.move_direction = move_direction
         player.look_direction = move_direction
 
+    if pygame.sprite.collide_mask(player, glitch):
+        glitch.relocate()
+        # Opcjonalnie: print("Zebrałeś glitcha!") lub player.points += 1
+        # --- RYSOWANIE ---
     tile_map.blit(screen)
     all_sprites.update(dt)
     all_sprites.draw(screen)
