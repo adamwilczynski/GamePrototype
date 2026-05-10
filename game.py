@@ -86,7 +86,7 @@ fps = config.MAX_FPS
 # pygame setup
 pygame.init()
 
-bg_sound = load_wav_sound("./assets/core_ambient.wav", speed=0.8, volume=0.8     )
+# bg_sound = load_wav_sound("./assets/core_ambient.wav", speed=0.8, volume=0.8)
 background_channel = pygame.mixer.Channel(0)
 bg_music_playing = False
 
@@ -116,8 +116,8 @@ video_frames = video_support.iter_video_frames_timed("./assets/intro.mp4", size=
 current_frame = None
 time_until_next_frame = 0.0
 video_done = False
-load_wav_sound("./assets/maintheme.wav", volume=0.4, speed=0.9).play()  # Muzyka
-load_wav_sound("./assets/intro.wav", speed=0.9).play()
+# load_wav_sound("./assets/maintheme.wav", volume=0.4, speed=0.9).play()  # Muzyka
+# load_wav_sound("./assets/intro.wav", speed=0.9).play()
 
 playerscore = 0
 time_spent = 0
@@ -156,9 +156,9 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-    if not bg_music_playing:
-        background_channel.play(bg_sound, loops=-1)
-        bg_music_playing = True
+    # if not bg_music_playing:
+    #     background_channel.play(bg_sound, loops=-1)
+    #     bg_music_playing = True
 
     move_direction = pygame.math.Vector2(0, 0)
     player.move_direction = move_direction
@@ -190,8 +190,8 @@ while running:
 
     if pygame.sprite.collide_mask(player, glitch):
         glitch.relocate()
-        sound = load_wav_sound("./assets/glitch.wav", 4 * (health / 100))
-        sound.play()
+        # sound = load_wav_sound("./assets/glitch.wav", 4 * (health / 100))
+        # sound.play()
         health = min(config.MAX_HEALTH, health + 10)
         playerscore +=1
         # Opcjonalnie: print("Zebrałeś glitcha!") lub player.points += 1
@@ -201,8 +201,8 @@ while running:
         if pygame.sprite.collide_mask(player, enemy_follow) or \
                 pygame.sprite.collide_mask(player, enemyRandom):
             health -= 5 # Spadek zdrowia
-            sound = load_wav_sound("./assets/enemy.wav", 4 * (health / 100))
-            sound.play()
+            # sound = load_wav_sound("./assets/enemy.wav", 4 * (health / 100))
+            # sound.play()
             player.invincibility_timer = 1.0
 
     tile_map.blit(screen)
